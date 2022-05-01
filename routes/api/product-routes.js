@@ -9,16 +9,17 @@ router.get('/', (req, res) => {
   // be sure to include its associated Category and Tag data
   Product.findAll({
     //attributes: ['id', 'product_name', 'price', 'stock'],
-    include:[{
+    include:[
+      {
         model:Tag,
-        attributes:['tag_name'],
         through:Product,
-        as:'tag_name'
+        as:'tags'
       },
       {
         model:Category,
         attributes:['category_name']
-      }]
+      }
+    ]
   }).then(data=>{
     if(!data){
       res.status(404).json({message:'No products found'})
@@ -41,11 +42,11 @@ router.get('/:id', (req, res) => {
       id:req.params.id
     },
     attributes:['id','product_name', 'price','stock'],
-    include:[{
+    include:[
+    {
       model:Tag,
-      attributes:['tag_name'],
       through:Product,
-      as:'tag_name'
+      as:'tags'
     },
     {
       model:Category,
@@ -65,10 +66,10 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   /* req.body should look like this...
     {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
+      "product_name": "Basketball",
+      "price": "200.00",
+      "stock": "3",
+      "tagIds": [1, 2, 3, 4]
     }
   */
   Product.create(req.body)
